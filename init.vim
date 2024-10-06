@@ -1,3 +1,10 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" sudo apt install astyle (format code cpp)
+" sudo apt install clangd (for cpp)
+" edit CocConfig file using clangd (for cpp)
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General settings
 autocmd vimEnter *.cpp map <F8> :w <CR> :!clear ; g++ --std=c++17 %; if [ -f a.out ]; then time ./a.out; rm a.out; fi <CR>
 set mouse=a                 " Enable mouse
@@ -14,6 +21,8 @@ set relativenumber                  " Show line number
 set ignorecase              " Enable case-sensitive 
 
 "set lcs+=space:·            " enable if want to show space as dot
+
+set guifont=*
 
 noremap <C-f> :%!astyle -s4<CR>  " format c++ code by 1tab = 4 space
 " Disable backup
@@ -54,12 +63,16 @@ autocmd FileChangedShellPost *
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Key mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""" 
-" Resize pane
+" Resize pane, note M = Alt
 nmap <M-Right> :vertical resize +1<CR>    
 nmap <M-Left> :vertical resize -1<CR>
-nmap <M-Down> :resize +1<CR>
-nmap <M-Up> :resize -1<CR>
+nmap <M-Down> :resize -1<CR>
+nmap <M-Up> :resize +1<CR>
 
+" buffer delete, next, previous // leader = \
+map <leader>n :bnext<cr>
+map <leader>p :bprevious<cr>
+map <leader>d :bdelete<cr>
 " Search a hightlighted text
 vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 nmap /\ :noh<CR>
@@ -72,7 +85,7 @@ call plug#begin(stdpath('config').'/plugged')
   Plug 'joshdick/onedark.vim',                  " Dark theme
 
 " File browser
-"  Plug 'preservim/nerdTree'                     " File browser  
+  Plug 'preservim/nerdTree'                     " File browser  
 "  Plug 'Xuyuanp/nerdtree-git-plugin'            " Git status
   Plug 'ryanoasis/vim-devicons'                 " Icon
   Plug 'tiagofumo'
@@ -80,11 +93,12 @@ call plug#begin(stdpath('config').'/plugged')
   Plug 'unkiwii/vim-nerdtree-sync'              " Sync current file 
 
 " File search
-"  Plug 'junegunn/fzf', 
-"    \ { 'do': { -> fzf#install() } }            " Fuzzy finder 
-"  Plug 'junegunn/fzf.vim'
+ Plug 'junegunn/fzf', 
+   \ { 'do': { -> fzf#install() } }            " Fuzzy finder 
+ Plug 'junegunn/fzf.vim'
   " pretty
   Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
+
 " Status bar
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
@@ -112,7 +126,7 @@ call plug#begin(stdpath('config').'/plugged')
 
 " Code syntax highlight
   Plug 'yuezk/vim-js'                           " Javascript
-  Plug 'MaxMEllon/vim-jsx-pretty'               " JSX/React
+  " Plug 'MaxMEllon/vim-jsx-pretty'               " JSX/React
   Plug 'jackguo380/vim-lsp-cxx-highlight'       " C/C++
 "  Plug 'uiiaoo/java-syntax.vim'                 " Java
 
@@ -128,6 +142,9 @@ call plug#begin(stdpath('config').'/plugged')
 "  Plug 'tpope/vim-rhubarb' 
 "  Plug 'airblade/vim-gitgutter'                 " Git show changes 
 "  Plug 'samoshkin/vim-mergetool'                " Git merge
+
+" VERILOG
+    Plug 'vhda/verilog_systemverilog.vim'
 call plug#end()
 
 
@@ -160,6 +177,16 @@ inoremap <silent><expr> <Tab>
       \ coc#pum#visible() ? coc#pum#next(1) :
       \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
+
+" nerttree config
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-m> :NERDTreeToggle<CR>
+" config for ejs
+au BufNewFile,BufRead *.ejs set filetype=html
+" conpile c/c++ file
+"nnoremap <f6> <esc>:!gcc -o %:r %:t<enter>
+nnoremap <f7> <esc>:!g++ -std=c++14 -o %:r %:t<enter>
+nnoremap <f8> <esc>:!./%:r<enter>
 
 " Other setting
 for setting_file in split(glob(stdpath('config').'/settings/*.vim'))
